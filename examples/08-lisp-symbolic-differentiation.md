@@ -27,12 +27,15 @@ that scare everyone away.
 ```python
 # SYMBOLIC DIFFERENTIATION: TAKE THE DERIVATIVE OF A FORMULA, AS DATA
 
-# The formula arrives as a nested list, like "the sum of x and the
-# product of 3 and x". The answer is another formula, not a number.
-# The function looks at the formula's shape, applies the matching rule
-# from calculus, and calls itself on the smaller pieces inside.
+# The answer is another formula, not a number. The function looks at
+# the formula's shape, applies the matching rule from calculus, and
+# calls itself on the smaller pieces inside.
 
 Define "deriv", given [expr, var]:
+
+    Where expr is the formula itself, arriving as a nested list -
+    like "the sum of x and the product of 3 and x".
+    Where var is the variable the derivative is taken with respect to.
 
     If the formula is a plain number:
         The derivative is zero.

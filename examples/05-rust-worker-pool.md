@@ -47,6 +47,9 @@ fn parallel_word_count(paths: Vec<String>, workers: usize) -> usize {
 
 Define "parallel_word_count", given [paths, workers]:
 
+    Where paths is the list of files whose words should be counted.
+    Where workers is how many counting threads to run at once.
+
     Set up two conveyor belts:
         one carrying file paths out to the workers,
         and one carrying finished counts back.

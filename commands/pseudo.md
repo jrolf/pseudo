@@ -45,11 +45,18 @@ reimplement the behavior from it.
   `Define "name", given [params]:` - the real identifier in quotes, the
   real parameter names in brackets (omit `, given [...]` when there are
   none). This is the one place source spelling is welcome; inside the
-  body, everything goes back to human phrases. Classes open with
-  `Define the "ClassName" class:`, state the invariant the object
-  maintains, then one `Define` per public operation. Use
+  body, everything goes back to human phrases. Use
   `To <do something> ... :` only for operations with no source
   identifier, such as design sketches.
+- Directly under each `Define` opener, add one `Where <param> is ...`
+  sentence per parameter a smart outsider could not confidently picture,
+  then a blank line before the body. Explain the role the parameter
+  plays, never its source type. When in doubt, write the clause.
+- Classes open with `Define the "ClassName" class:`. The object's big
+  idea goes in a voiceover comment under the opener; its starting state
+  and invariant are stated in the constructor, translated like any other
+  method under its real name (`__init__`, `constructor`, `new`). Then
+  one `Define` per public operation.
 - Name state in human terms and keep names consistent for the whole block:
   "the retry counter", "the user's latest message", "the frontier". Prefer
   the role something plays over the type it has.

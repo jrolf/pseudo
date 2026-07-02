@@ -37,6 +37,11 @@ function archiveErrors(inputPath, outputPath, done) {
 
 Define "archiveErrors", given [inputPath, outputPath, done]:
 
+    Where inputPath locates the huge log file to be read.
+    Where outputPath locates the compressed archive to be written.
+    Where done is the function to call exactly once at the end,
+    with either the failure or nothing at all on success.
+
     Connect four stations into one assembly line:
         read the log file a chunk at a time,
         keep only the lines containing the error marker,

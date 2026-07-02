@@ -324,9 +324,30 @@ parameters. The body indents beneath it, exactly like a Python `def`:
 
 Define "reverse", given [head]:
 
+    Where head is the first link of the chain.
+
     Keep track of three positions while walking the chain:
         ...
 ```
+
+**Where clauses.** Never assume a parameter's meaning is obvious. Directly
+under the opener, add one `Where <param> is ...` sentence per parameter
+that a smart outsider could not confidently picture, then a blank line
+before the body. A Where clause answers "what kind of thing is this, and
+what role does it play here?" - never the source type:
+
+```python
+Define "dijkstra", given [graph, source]:
+
+    Where graph is the map of the network: for every place, the list
+    of roads leaving it and what each road costs to travel.
+    Where source is the place all journeys start from.
+```
+
+Skip a clause only when the parameter is genuinely self-explanatory in
+context; when in doubt, write it. A non-obvious return value carries the
+same duty on the way out: "Return the table of best known costs, one per
+place."
 
 Use the `To ... :` recipe form only when there is no source identifier to
 quote - a design sketched before code exists, or a sub-operation you
@@ -334,17 +355,30 @@ extracted for readability.
 
 ### Classes and objects
 
-A class opens with `Define the "ClassName" class:`. First inside it comes
-the object's standing promise - the invariant it maintains - stated as
-plain sentences. Then one `Define` per public operation:
+A class opens with `Define the "ClassName" class:`. Everything inside it
+must be clearly one of two things - a voiceover comment or an operation.
+So the object's big idea goes in a `#` comment directly under the opener,
+and its starting state is communicated where it actually happens: in the
+constructor, translated like any other method under its real name
+(`__init__`, `constructor`, `new`, and so on). The constructor's body is
+where the object's invariant gets stated, because the constructor is what
+brings that invariant into existence. Then one `Define` per public
+operation:
 
 ```python
 # LEAST-RECENTLY-USED CACHE
 
 Define the "LRUCache" class:
 
-    The cache keeps its entries in order from least recently used to
-    most recently used, and holds at most a fixed number of entries.
+    # One idea runs this whole object: the order of the entries IS the
+    # record of recency, so eviction only ever harvests the far end.
+
+    Define "__init__", given [capacity]:
+        Where capacity is the most entries the cache may hold at once.
+
+        Remember the capacity.
+        Start with an empty collection of entries, kept in order from
+        least recently used to most recently used.
 
     Define "get", given [key]:
         If the key is not in the cache:
@@ -503,6 +537,10 @@ Translation:
 # FETCH WITH BOUNDED, BACKING-OFF RETRIES
 
 Define "fetchWithRetry", given [url, attempts]:
+
+    Where url is the address of the resource being requested.
+    Where attempts is how many tries are allowed before giving up,
+    three if the caller does not say.
 
     Set the waiting period to a fifth of a second.
 

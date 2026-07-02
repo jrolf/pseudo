@@ -1,17 +1,20 @@
 # Pseudo
 
 ```text
-                  _ _                            \    |    /
-               _-( | )-_                     .    \   |   /    .
-            _-(   \|/   )-_                    .    \ | /    .
-           (_-(   /|\   )-_)             - --   .---------.   -- -
-             (_-  \|/  -_)                     (           )
-                \  |  /                  ~~~~~~~'---------'~~~~~~~
-                   |                  ~~~    ~~~~   ~~~~~   ~~~~
-                   |\              ~~~   ~~~~    ~~~~~   ~~~~  ~~
-                   | \          ~~~    ~~~~   ~~~~~~   ~~~~
-     ______________|__\_________________________________________
-       .  '  .  .     '  .    p s e u d o    .   '  .    ' .  .
+               __  _  __                          \      |      /
+         _.--~~  \ | /  ~~--._               .     \     |     /     .
+       .'   .--~ \\|// ~--.   '.                      __..---..__
+      /   .'   .-(o o)-.   '.   \       - -- --    .-'           '-.    -- -
+     ;   /    /   \\|//   \    \  ;     - -- -    /                 \    -- -
+     '  '    '     \|/     '    ' '               ;                   ;
+                    |         ~^~ ~~^~ ^~~ ~^~ ~^|                   |^~ ~~^
+                    |        ^~ ~^~~ ^~^ ~~^ ~^~^ \                 / ~^~ ^~
+                   (|       ~^~ ~~^~ ^~~^~ ~^~ ~~^ '-..___ _ ___..-' ^~ ~~^~
+                    |)     ~~^ ~^~^ ~~^~ ^~~^ ~^~ ~^~ ~^ ': : :' ~^ ~^~ ^~~
+                   (|     ^~ ~^~~^ ~^~ ~^~~ ^~~^~ ~^~~^~ ~ ': :' ~ ~^~^ ~~^
+                    |
+     _______________|________________________________________________________
+       .  '  .  .      ' .   .      p s e u d o      .   '  .   ` .  '  .  '
 ```
 
 **Point at any code, in any language, and get back logic that anyone can read.**
@@ -60,6 +63,11 @@ And here is what your agent hands back when you ask for Pseudo:
 
 Define "debounce", given [fn, wait, immediate]:
 
+    Where fn is the function being protected from over-calling.
+    Where wait is how long the silence must last, in milliseconds,
+    before the function actually fires.
+    Where immediate, when set, switches the wrapper into fire-first mode.
+
     Build and return a wrapper around the original function,
     sharing one countdown timer that survives between calls.
 
@@ -90,7 +98,7 @@ states it. The comments are not narration; they are a voiceover explaining
 
 That is the whole trick, and it works on everything. The
 [examples gallery](examples/README.md) proves it across ten languages and
-ten domains: Python data structures, SQL analytics, a TypeScript reducer,
+ten domains: a Python merge algorithm, SQL analytics, a TypeScript reducer,
 a Rust worker pool, a Node.js stream pipeline, Dijkstra in C++, symbolic
 differentiation in Lisp, pointer surgery in C, and a regex nobody wants to
 read - all coming out in the same plain notation.
@@ -123,16 +131,15 @@ be that conversation.
 
 ```
 pseudo/
-├── README.md                        You are here
-├── SPEC.md                          The canonical style specification (the ten rules)
-├── examples/                        Ten worked translations across ten languages:
-│                                    JS, Python, SQL, TypeScript, Rust, Node,
-│                                    C++, Lisp, C, and regex
-└── .claude/
-    ├── skills/pseudo/SKILL.md       The skill: the full translation doctrine,
-    │                                rules, vocabulary, and domain playbook
-    ├── rules/pseudo-style.md        The rule: makes Pseudo the house pseudocode style
-    └── commands/pseudo.md           The command: /pseudo <target> on demand
+├── README.md                  You are here
+├── SPEC.md                    The canonical style specification (the ten rules)
+├── examples/                  Ten worked translations across ten languages:
+│                              JS, Python, SQL, TypeScript, Rust, Node,
+│                              C++, Lisp, C, and regex
+├── skills/pseudo/SKILL.md     The skill: the full translation doctrine,
+│                              rules, vocabulary, and domain playbook
+├── rules/pseudo-style.md      The rule: makes Pseudo the house pseudocode style
+└── commands/pseudo.md         The command: /pseudo <target> on demand
 ```
 
 Three artifacts, three jobs:
@@ -154,8 +161,8 @@ Three artifacts, three jobs:
 Open Claude Code or Cursor and paste this:
 
 > Look at https://github.com/jrolf/pseudo and install the Pseudo skill from
-> it. Copy `.claude/skills/pseudo/SKILL.md` into my personal skills
-> directory so it works in all my projects.
+> it. Copy `skills/pseudo/SKILL.md` into my personal skills directory so it
+> works in all my projects.
 
 That's it. Your agent will fetch the skill and put it in the right place.
 Then try it:
@@ -169,7 +176,7 @@ Personal (all your projects):
 ```bash
 mkdir -p ~/.claude/skills/pseudo
 curl -o ~/.claude/skills/pseudo/SKILL.md \
-  https://raw.githubusercontent.com/jrolf/pseudo/main/.claude/skills/pseudo/SKILL.md
+  https://raw.githubusercontent.com/jrolf/pseudo/main/skills/pseudo/SKILL.md
 ```
 
 Per-project (shared with your team via git): put the same file at
@@ -181,7 +188,7 @@ copy the rule:
 ```bash
 mkdir -p .claude/rules
 curl -o .claude/rules/pseudo-style.md \
-  https://raw.githubusercontent.com/jrolf/pseudo/main/.claude/rules/pseudo-style.md
+  https://raw.githubusercontent.com/jrolf/pseudo/main/rules/pseudo-style.md
 ```
 
 New sessions in that project will pick both up automatically. Type `/pseudo`
@@ -194,12 +201,11 @@ Cursor reads skills from `~/.cursor/skills/`:
 ```bash
 mkdir -p ~/.cursor/skills/pseudo
 curl -o ~/.cursor/skills/pseudo/SKILL.md \
-  https://raw.githubusercontent.com/jrolf/pseudo/main/.claude/skills/pseudo/SKILL.md
+  https://raw.githubusercontent.com/jrolf/pseudo/main/skills/pseudo/SKILL.md
 ```
 
-For a project rule in Cursor, paste the contents of
-`.claude/rules/pseudo-style.md` into your project's `AGENTS.md` or a
-`.cursor/rules/` rule file.
+For a project rule in Cursor, paste the contents of `rules/pseudo-style.md`
+into your project's `AGENTS.md` or a `.cursor/rules/` rule file.
 
 ### No install at all
 

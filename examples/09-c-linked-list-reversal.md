@@ -30,6 +30,9 @@ struct node *reverse(struct node *head) {
 
 Define "reverse", given [head]:
 
+    Where head is the first link of the chain - each link holds a value
+    and points onward to the next, until the last points to nothing.
+
     Keep track of three positions while walking the chain:
         the part already reversed, which starts out empty,
         the link currently being flipped,

@@ -210,17 +210,55 @@ Three details make this work:
   Omit `, given [...]` entirely when there are no parameters.
 - The body is indented beneath the opener, exactly like a Python `def`.
 
-A class opens the same way, followed first by the invariant the object
-maintains - its standing promise, stated as plain sentences - and then one
-`Define` per public operation:
+### Explain the parameters with Where clauses
+
+Never assume a parameter's meaning is obvious. Directly under the opener,
+add one `Where <param> is ...` sentence per parameter that a smart outsider
+could not confidently picture, then a blank line before the body begins:
+
+```python
+Define "dijkstra", given [graph, source]:
+
+    Where graph is the map of the network: for every place, the list
+    of roads leaving it and what each road costs to travel.
+    Where source is the place all journeys start from.
+
+    Record the best known cost to reach every place:
+        ...
+```
+
+Where clauses answer "what kind of thing is this, and what role does it
+play here?" - not the source type. Skip a clause only when the parameter
+is genuinely self-explanatory in context; when in doubt, write it. The
+same goes for a non-obvious return value: a closing line like "Return the
+table of best known costs, one per place." carries the same duty on the
+way out.
+
+### Classes
+
+A class opens with `Define the "ClassName" class:`. Everything inside it
+must be clearly one of two things - a voiceover comment or an operation -
+so the object's big idea goes in a `#` comment, and its starting state is
+communicated where it actually happens: in the constructor, translated
+like any other method under its real name (`__init__`, `constructor`,
+`new`, and so on). The constructor's body is where the object's invariant
+gets stated, because the constructor is what brings that invariant into
+existence:
 
 ```python
 # LEAST-RECENTLY-USED CACHE
 
 Define the "LRUCache" class:
 
-    The cache keeps its entries in order from least recently used to
-    most recently used, and holds at most a fixed number of entries.
+    # One idea runs this whole object: the order of the entries IS the
+    # record of recency, so eviction only ever harvests the far end.
+
+    Define "__init__", given [capacity]:
+        Where capacity is the most entries the cache may hold at once.
+
+        Remember the capacity.
+        Start with an empty collection of entries, kept in order from
+        least recently used to most recently used.
 
     Define "get", given [key]:
         If the key is not in the cache:
@@ -323,7 +361,7 @@ This document defines the style. The operational doctrine for actually
 producing translations - vocabulary tables, an altitude guide, and a
 domain-by-domain playbook covering classes, recursion, concurrency, async,
 error handling, SQL, regexes, state machines, pointer code, and functional
-pipelines - lives in the skill file at `.claude/skills/pseudo/SKILL.md`.
+pipelines - lives in the skill file at `skills/pseudo/SKILL.md`.
 The two documents agree by construction; if they ever diverge, this spec
 wins and the skill has a bug.
 

@@ -48,6 +48,10 @@ std::vector<long long> dijkstra(
 
 Define "dijkstra", given [graph, source]:
 
+    Where graph is the map of the network: for every place, the list
+    of roads leaving it and what each road costs to travel.
+    Where source is the place all journeys start from.
+
     Record the best known cost to reach every place:
         Start every place at "unreachable", except the starting place
         at zero.
@@ -72,7 +76,7 @@ Define "dijkstra", given [graph, source]:
                 Record the improvement.
                 Add the neighbor to the frontier at the improved cost.
 
-    Return the table of best known costs.
+    Return the table of best known costs, one per place.
 ```
 
 ## What the translation reveals

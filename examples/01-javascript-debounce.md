@@ -30,6 +30,11 @@ function debounce(fn, wait, immediate) {
 
 Define "debounce", given [fn, wait, immediate]:
 
+    Where fn is the function being protected from over-calling.
+    Where wait is how long the silence must last, in milliseconds,
+    before the function actually fires.
+    Where immediate, when set, switches the wrapper into fire-first mode.
+
     Build and return a wrapper around the original function,
     sharing one countdown timer that survives between calls.
 

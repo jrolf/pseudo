@@ -13,9 +13,11 @@ The core requirements, in brief:
   a colon: `If ... :`, `Otherwise:`, `For each ... :`, `While ... :`, or a
   plain descriptive phrase that groups steps ("Validate the decision:").
 - Named callables from the source open with `Define "name", given [params]:`
-  using the real identifier and parameter names; classes open with
-  `Define the "ClassName" class:` followed by the invariant the object
-  maintains, then one `Define` per public operation.
+  using the real identifier and parameter names, followed by one
+  `Where <param> is ...` sentence per parameter whose meaning is not
+  obvious. Classes open with `Define the "ClassName" class:`, put the
+  object's big idea in a voiceover comment, and state starting state and
+  invariant inside the constructor, translated like any other method.
 - Name state in human terms ("the retry counter", "the user's latest
   message"), never with variable names - the `Define` opener is the one
   sanctioned exception.
@@ -30,5 +32,6 @@ Never write academic-style pseudocode (assignment arrows, BEGIN/END,
 numbered algorithm lines) and never mix real executable code into a Pseudo
 block.
 
-The full specification with worked examples lives in `SPEC.md` at the repo
-root. When in doubt about a formatting decision, read it.
+The full specification with worked examples lives at
+https://github.com/jrolf/pseudo/blob/main/SPEC.md. When in doubt about a
+formatting decision, read it.

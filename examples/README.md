@@ -12,7 +12,7 @@ dance, and a regex all come out speaking the same language.
 | # | Example | Source language | Domain | What it shows |
 |---|---|---|---|---|
 | 1 | [Debounce](01-javascript-debounce.md) | JavaScript | UI and timing | Cutting through closure and callback syntax |
-| 2 | [LRU cache](02-python-lru-cache.md) | Python | Data structures | Making an invisible invariant visible |
+| 2 | [Merge intervals](02-python-merge-intervals.md) | Python | Algorithms | The one-line insight the code never states |
 | 3 | [Top customers query](03-sql-window-query.md) | SQL | Analytics | Pseudo works on declarative languages |
 | 4 | [Fetch reducer](04-typescript-reducer.md) | TypeScript | State management | A race-condition guard hiding as boilerplate |
 | 5 | [Worker pool](05-rust-worker-pool.md) | Rust | Concurrency | Channel closure as a shutdown protocol |

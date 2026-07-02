@@ -52,6 +52,10 @@ The state is always exactly one of:
 
 Define "reducer", given [state, action]:
 
+    Where state is the current situation, one of the four shapes above.
+    Where action is the event that just happened, carrying whatever
+    details that kind of event brings with it.
+
     # The reducer never mutates anything. Given the current state and one
     # event, it produces the next state, and stale events produce no
     # change at all.
