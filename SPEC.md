@@ -107,10 +107,12 @@ counter", "the working memory", "the user's latest message". Never invent
 variable names, and never carry cryptic names over from the source code. If
 the original calls it `usr_ctx_blob`, Pseudo calls it "the user's context".
 
-The single exception is the `Define` opener (see "Defining functions,
-methods, and classes"), where the real identifier and parameter names from
-the source appear verbatim so readers can jump between the translation and
-the code.
+Two exceptions are sanctioned: the `Define` opener (see "Defining
+functions, methods, and classes"), where the real identifier and parameter
+names from the source appear verbatim so readers can jump between the
+translation and the code, and the optional trailing anchor (see "The
+anchor extension"), which quotes a source expression in brackets at the
+end of a sentence.
 
 ### 5. Comments are voiceover, not narration
 
@@ -318,6 +320,129 @@ Wrap up:
     Return or report the result.
 ```
 
+## The auxiliary registers
+
+The narrative register - sentence lines on a Python skeleton - is the
+default, and the only register for control flow. But some ideas that come
+up constantly when describing code are not control flow, and forcing them
+into indented sentences serves nobody. For those, Pseudo has four auxiliary
+registers and one document template. Each has exactly one job, and the
+governing principle is strict: **many registers, hard boundaries, one
+grammar.** Registers switch between blocks, never within a line. Within a
+line you are always in sentence mode. The shared grammar - trustworthy
+indentation, named exits, voiceover comments, human naming - holds
+everywhere.
+
+### The anchor extension
+
+A sentence line may carry an optional bracketed anchor at the end of the
+line, tying it back to the exact expression in the source:
+
+```python
+Take the cheapest waiting entry off the frontier.  [frontier.pop]
+If this entry is worse than the best known cost for its place:  [cost > dist[node]]
+    Skip it; it is stale.
+```
+
+A non-programmer reads straight past the brackets; an engineer gets a jump
+table into the code. Two rules keep anchors from decaying into code:
+the sentence must be complete and correct with the anchor deleted, and
+anchors never appear in comments, `Where` clauses, or block titles. Use
+them when the reader is likely to move between the translation and the
+source - code review, debugging walkthroughs, onboarding docs - and skip
+them when the audience will never open the code.
+
+### The taxonomy register
+
+For enumerating a design space, an option menu, or a family of cases,
+aligned label-lists beat indented sentences because they are scannable and
+countable. Write them in a `text` fence:
+
+```text
+Retry:      The same action again, bounded, with repair hints.
+Replan:     Discard the remaining plan; build a new one from current state.
+Backtrack:  Return to an earlier choice point; try a sibling branch.
+Escalate:   Ask a stronger model, another agent, or a human.
+```
+
+Rules: the label is a short noun or verb phrase, the description is one
+sentence, and there is no nesting. If you feel the need to nest, the
+content is control flow in disguise and belongs in the narrative register.
+
+### The algebra register
+
+For compositional definitions - what something is made of - one equation
+line beats a paragraph:
+
+```text
+Thought  =  Prompt + Context + LLM + Parsing + Validation
+Agent    =  Trigger fabric + Memory + Loop + Ledger
+```
+
+Rules: only `=` and `+`, every term is a capitalized human noun phrase, and
+every term is defined somewhere nearby. Algebra defines parts; it never
+describes sequence. "A then B" is narrative, not algebra.
+
+### The transition register
+
+For state machines whose full narrative treatment would drown the reader
+in `elif`, arrow lines summarize the map:
+
+```text
+ASSESS  ->  RESPOND | PLAN | SLEEP
+PLAN    ->  DISPATCH | RESPOND
+RESPOND ->  UPDATE_MEMORY | EXIT
+```
+
+Rule: the transition register may only ever *summarize* a machine that
+also receives a narrative block. The arrows show the shape; the narrative
+shows what happens inside each state and why. Neither alone is complete.
+
+### The pattern card
+
+When a document describes several algorithms, systems, or design patterns
+side by side, wrap each one in a fixed card so any two can be compared
+field by field:
+
+```text
+Core idea:  One sentence naming the bet this design makes.
+Anatomy:    An algebra line naming the parts.
+Exits:      The named terminal states, separated by pipes.
+[The narrative Pseudo block.]
+Failure modes / caveats:  A taxonomy block or a short prose note.
+```
+
+Fields may be dropped when they carry nothing; the card is a comparison
+instrument, not a bureaucratic form.
+
+## Choosing the resolution
+
+Pseudo describes logic at whatever altitude the reader needs, and the
+biggest translation decision - bigger than any formatting rule - is
+choosing that altitude deliberately. Four named resolutions cover the
+useful range:
+
+```text
+Trace level:      Nearly line-for-line. Every branch and mutation of the
+                  source appears. For audits, debugging, and code review.
+Function level:   One block per function, mechanical detail collapsed to
+                  its meaning. The default for "translate this function".
+Component level:  One block per meaningful operation or phase of a file
+                  or class; trivial plumbing omitted and said to be
+                  omitted. For onboarding and design review.
+System level:     One page for many files: how the pieces talk, where
+                  state lives, what triggers what. Individual functions
+                  appear only as single sentences or algebra terms.
+```
+
+The resolution is the reader's choice, not the translator's convenience.
+When a request spans multiple files or an entire subsystem and the desired
+resolution is not stated, discover it - ask one focused question ("do you
+want a near line-for-line logic map, or a one-page picture of how it all
+works?") or state the assumption being made and offer the alternative. A
+system-level overview that ends by offering to drill into any block at
+trace level is often the strongest answer of all.
+
 ## Fencing and formatting
 
 Write Pseudo inside fenced code blocks tagged `python`. The tag is a trick:
@@ -358,18 +483,21 @@ holds the line between the two on purpose:
 ## Beyond this spec
 
 This document defines the style. The operational doctrine for actually
-producing translations - vocabulary tables, an altitude guide, and a
-domain-by-domain playbook covering classes, recursion, concurrency, async,
-error handling, SQL, regexes, state machines, pointer code, and functional
-pipelines - lives in the skill file at `skills/pseudo/SKILL.md`.
+producing translations - vocabulary tables, guidance for choosing the
+resolution and the register mix, and a domain-by-domain playbook covering
+classes, recursion, concurrency, async, error handling, SQL, regexes,
+state machines, pointer code, and functional pipelines - lives in the
+skill file at `skills/pseudo/SKILL.md`.
 The two documents agree by construction; if they ever diverge, this spec
 wins and the skill has a bug.
 
 ## Style anti-patterns to catch in review
 
-- A line containing `()`, `=`, `->`, `[i]`, or a camelCase word. Rewrite it
-  as a sentence. (The one sanctioned exception: the quoted identifier and
-  bracketed parameter list in a `Define` opener.)
+- A narrative line containing `()`, `=`, `->`, `[i]`, or a camelCase word.
+  Rewrite it as a sentence. (Two sanctioned exceptions: the quoted
+  identifier and bracketed parameter list in a `Define` opener, and a
+  trailing bracketed anchor whose deletion leaves the sentence complete.
+  Auxiliary-register blocks in `text` fences have their own grammar.)
 - An `If` with no visible alternative when the alternative matters. Add the
   `Otherwise:` or state that nothing happens.
 - A loop with no visible way to end. Add the exit and name its reason.

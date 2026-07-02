@@ -5,8 +5,9 @@ description: >-
   sentences with Python-shaped indentation, so anyone can understand the logic
   regardless of programming language. Use whenever the user asks for
   pseudocode, a plain-English explanation of how code works, a walkthrough of
-  an algorithm, function, or class, or says "pseudo", "translate this to
-  pseudo", or "explain this like I don't know the language".
+  an algorithm, function, class, file, or whole subsystem, or says "pseudo",
+  "translate this to pseudo", or "explain this like I don't know the
+  language".
 ---
 
 # Pseudo: Python-Shaped English
@@ -22,12 +23,37 @@ Hold both bars at once. If a non-programmer would stumble, the English has
 failed. If an engineer could not rebuild the behavior, the structure has
 failed. Every rule below exists to protect one of those two bars.
 
+## You are choosing a representation, not filling a template
+
+This skill gives you a palette, and you are expected to exercise judgment
+in using it. Before writing anything, decide two things:
+
+1. **The resolution** - how much altitude the reader wants, from
+   near line-for-line up to one page for an entire subsystem (see
+   "Choosing the resolution" below). For anything bigger than a single
+   function, this is the most consequential decision you will make, and
+   it belongs to the reader, not to you.
+2. **The register mix** - the narrative register carries all control
+   flow, but taxonomies, compositional definitions, state-machine maps,
+   and side-by-side pattern comparisons each have a better tool (see
+   "The register palette" below). Pick the representation that makes
+   the specific logic in front of you most legible, not the one this
+   document happens to show most often.
+
+The rules below are guardrails, not a script. Two translations of the
+same code can both be excellent Pseudo at different resolutions with
+different register mixes. What they may never differ on: trustworthy
+indentation, named exits, voiceover comments, human naming, and
+faithfulness to the source.
+
 ## The deliverable
 
-Emit Pseudo inside a fenced code block tagged `python`. The tag is a
-rendering trick, not a claim: the content is never actual Python, but the
-`python` tag buys indentation-aware display and pleasant comment
+Emit narrative Pseudo inside a fenced code block tagged `python`. The tag
+is a rendering trick, not a claim: the content is never actual Python, but
+the `python` tag buys indentation-aware display and pleasant comment
 highlighting in nearly every editor, chat client, and markdown viewer.
+Auxiliary-register blocks (taxonomy, algebra, transition) go in `text`
+fences instead, since they are not indentation-shaped.
 
 - Use four spaces per indentation level.
 - Keep lines comfortably under about 80 characters.
@@ -122,16 +148,18 @@ memory", "the user's latest message", "the running total". Never invent
 variable names, and never carry cryptic names over from the source. If the
 original calls it `usr_ctx_blob`, Pseudo calls it "the user's context".
 
-The single exception is the `Define` opener, where the real identifier and
-parameter names from the source appear verbatim (camelCase and all) so a
-reader can jump between the translation and the code:
+Two sanctioned exceptions exist. The first is the `Define` opener, where
+the real identifier and parameter names from the source appear verbatim
+(camelCase and all) so a reader can jump between the translation and the
+code:
 
 ```python
 Define "fetchWithRetry", given [url, attempts]:
 ```
 
 Inside the body, those parameters go back to being human phrases ("the
-resource's address", "the allowed number of attempts").
+resource's address", "the allowed number of attempts"). The second is the
+optional trailing anchor described under "The register palette" below.
 
 Two refinements:
 
@@ -268,7 +296,9 @@ Return the count.
 ```
 
 When the whole function truly is one idea ("count the lines"), say so in
-one line and move on - the altitude test cuts both ways.
+one line and move on - the altitude test cuts both ways. This rule governs
+altitude *within* a block; for choosing the altitude of the whole
+deliverable, see "Choosing the resolution" below.
 
 ## Vocabulary reference
 
@@ -297,6 +327,124 @@ the best known cost", "over capacity", "within the budget". Never `>`,
 **Uncertainty and ownership.** "Ask the model whether...", "Let policy
 decide...", "The caller provides...", "treating an unreadable file as
 empty" (for silent fallbacks - always surface them).
+
+## The register palette
+
+The narrative register - sentence lines on a Python skeleton - is the
+default and the only register for control flow. Four auxiliary registers
+and one document template cover the recurring ideas that are not control
+flow. The governing principle: **many registers, hard boundaries, one
+grammar.** Switch registers between blocks, never within a line. The
+shared grammar (trustworthy indentation, named exits, voiceover comments,
+human naming) holds in every register.
+
+### Anchors: tying sentences back to the source
+
+A sentence line may end with an optional bracketed anchor quoting the
+exact source expression it translates:
+
+```python
+Take the cheapest waiting entry off the frontier.  [frontier.pop]
+If this entry is worse than the best known cost for its place:  [cost > dist[node]]
+    Skip it; it is stale.
+```
+
+Non-programmers read past the brackets; engineers get a jump table into
+the code. Hard rules: the sentence must be complete and correct with the
+anchor deleted, and anchors never appear in comments, `Where` clauses, or
+titles. Reach for anchors when the reader will move between translation
+and source - code review, debugging, onboarding - and omit them when the
+audience will never open the code.
+
+### The taxonomy register: enumerating a space
+
+For option menus, failure-mode lists, and design-space enumerations, use
+aligned label-lists in a `text` fence instead of indented sentences:
+
+```text
+Retry:      The same action again, bounded, with repair hints.
+Replan:     Discard the remaining plan; build a new one from current state.
+Backtrack:  Return to an earlier choice point; try a sibling branch.
+Escalate:   Ask a stronger model, another agent, or a human.
+```
+
+Label is a short noun or verb phrase; description is one sentence; no
+nesting. Wanting to nest means the content is control flow in disguise -
+move it to the narrative register.
+
+### The algebra register: naming the parts
+
+For compositional definitions, one equation line beats a paragraph:
+
+```text
+Thought  =  Prompt + Context + LLM + Parsing + Validation
+Agent    =  Trigger fabric + Memory + Loop + Ledger
+```
+
+Only `=` and `+`; every term a capitalized human noun phrase, defined
+somewhere nearby. Algebra names parts, never sequence - "A then B" belongs
+in the narrative register.
+
+### The transition register: mapping a state machine
+
+When a state machine's full narrative treatment would drown the reader in
+`elif`, summarize the map with arrow lines:
+
+```text
+ASSESS  ->  RESPOND | PLAN | SLEEP
+PLAN    ->  DISPATCH | RESPOND
+RESPOND ->  UPDATE_MEMORY | EXIT
+```
+
+This register only ever *summarizes* a machine that also receives a
+narrative block: arrows show the shape, narrative shows what happens
+inside each state and why. Never ship the arrows alone.
+
+### The pattern card: comparing designs side by side
+
+When describing several algorithms or designs in one document, wrap each
+in a fixed card so any two can be compared field by field: a one-sentence
+core idea, an algebra line for the anatomy, the named exits separated by
+pipes, the narrative block, and a taxonomy block or short note for
+failure modes. Drop any field that carries nothing - the card is a
+comparison instrument, not a form.
+
+## Choosing the resolution
+
+Four named resolutions cover the useful range:
+
+```text
+Trace level:      Nearly line-for-line. Every branch and mutation appears.
+                  For audits, debugging sessions, and code review.
+Function level:   One block per function, mechanical detail collapsed to
+                  meaning. The default for "translate this function".
+Component level:  One block per meaningful operation or phase of a file
+                  or class; trivial plumbing omitted, and its omission
+                  stated. For onboarding and design review.
+System level:     One page for many files: how the pieces talk, where
+                  state lives, what triggers what. Individual functions
+                  appear only as single sentences or algebra terms.
+```
+
+How to choose:
+
+- A single function defaults to function level; go to trace level when
+  the request smells of review or debugging ("what exactly does this
+  do?", "walk me through this").
+- When the request spans several files or a whole subsystem and the
+  desired resolution is not stated, **discover it**: ask one focused
+  question ("do you want a near line-for-line logic map, or a one-page
+  picture of how it all works together?"). If asking is not possible,
+  state the assumption you are making and offer the alternative at the
+  end.
+- The strongest answer for a large system is often layered: a
+  system-level overview first, closing with an offer to drill into any
+  named block at trace level. The resolutions compose - an overview
+  block's single sentence can become the title of a full block one level
+  down.
+- Whatever the resolution, the rules still hold: named exits, visible
+  state changes, voiceover for the non-obvious. A system-level page still
+  answers "how does this end?" and "where does the world change?".
 
 ## Domain playbook
 
@@ -575,8 +723,9 @@ the confusing part, and the bug reported in prose - not silently fixed.
 
 ## Multi-block documents
 
-When translating a whole file, class, or subsystem, produce several blocks
-rather than one giant one:
+When translating a whole file, class, or subsystem, first settle the
+resolution (see "Choosing the resolution" above), then produce several
+blocks rather than one giant one:
 
 - One block per meaningful operation or phase; skip trivial accessors and
   boilerplate entirely (say so in prose if their absence might surprise).
@@ -613,7 +762,13 @@ Run this before delivering. Any hit means revise:
 
 - [ ] A line containing `()`, `=`, `->`, `[i]`, a camelCase word, or an
       operator instead of words - anywhere except the quoted identifier
-      and bracketed parameter list of a `Define` opener.
+      and bracketed parameter list of a `Define` opener, a trailing
+      bracketed anchor, or a fenced auxiliary-register block.
+- [ ] An anchor whose deletion leaves the sentence incomplete, or an
+      anchor inside a comment, `Where` clause, or title.
+- [ ] A transition-register arrow map shipped without its narrative block.
+- [ ] A multi-file request answered at an assumed resolution without
+      either asking or naming the assumption.
 - [ ] An `If` with no visible alternative, where the alternative matters.
 - [ ] A loop with no visible way to end.
 - [ ] An exit that does not name its reason.

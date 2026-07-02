@@ -124,7 +124,8 @@ be that conversation.
 ```
 pseudo/
 ├── README.md                  You are here
-├── SPEC.md                    The canonical style specification (the ten rules)
+├── SPEC.md                    The canonical spec: ten rules, the registers,
+│                              and the resolution ladder
 ├── examples/                  Ten worked translations across ten languages:
 │                              JS, Python, SQL, TypeScript, Rust, Node,
 │                              C++, Lisp, C, and regex
@@ -234,6 +235,31 @@ a reading language and a writing language.
 
 The full specification, with good/bad examples for each rule and the
 anti-pattern checklist, is in [SPEC.md](SPEC.md).
+
+## Beyond single functions: registers and resolution
+
+The sentence-and-indentation notation above carries all control flow, but
+Pseudo also knows that not everything worth explaining *is* control flow.
+The spec defines a small palette of auxiliary registers, each with exactly
+one job:
+
+- **Anchors** - a sentence can end with an optional bracketed pointer into
+  the source (`Take the cheapest entry off the frontier.  [frontier.pop]`).
+  Non-programmers read past it; engineers get a jump table into the code.
+- **Taxonomy** - aligned label-lists for enumerating a design space or an
+  option menu, because a menu should look like a menu.
+- **Algebra** - one equation line (`Thought = Prompt + Context + LLM`) for
+  naming what something is made of.
+- **Transition** - arrow maps (`ASSESS -> RESPOND | PLAN | SLEEP`) that
+  summarize a state machine alongside its narrative block.
+
+And Pseudo scales past the single function. The skill teaches agents four
+named resolutions - trace, function, component, and system level - so you
+can ask for a near line-for-line logic map of one function *or* a one-page
+picture of how five interconnected files work together. When the altitude
+is ambiguous, the agent asks which one you want instead of guessing. The
+representation adapts to the reader; the rules about trustworthy structure
+and named exits never do.
 
 ## Where this came from
 

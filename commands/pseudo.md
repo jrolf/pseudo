@@ -18,15 +18,26 @@ reimplement the behavior from it.
 
 ## Procedure
 
-1. Read the target code fully, including anything it calls that materially
+1. Settle the resolution. A single function defaults to one block at
+   function level. When the target spans several files or a subsystem and
+   the desired altitude is not stated, ask one focused question: near
+   line-for-line logic map, or a one-page picture of how it all works
+   together? If asking is not possible, state the assumption and offer the
+   alternative at the end. A system-level overview that offers to drill
+   into any block is often the strongest answer.
+2. Read the target code fully, including anything it calls that materially
    shapes its control flow. Never translate code you have not read. If a
    load-bearing dependency is unavailable, say so rather than guessing.
-2. Identify the skeleton before writing: the loops, the branches, the state
+3. Identify the skeleton before writing: the loops, the branches, the state
    that changes, the side effects, and every way the logic can end.
-3. Produce the translation as a fenced code block tagged `python` (the tag
-   is a rendering trick for indentation; the content is never real Python).
-4. Check the result against the quality checklist below and revise.
-5. Keep surrounding prose to a few sentences at most, reserved for what the
+4. Choose the register mix (see below). Control flow always goes in the
+   narrative register; taxonomies, part-lists, and state-machine maps have
+   better tools.
+5. Produce the translation: narrative blocks in fenced code blocks tagged
+   `python` (the tag is a rendering trick for indentation; the content is
+   never real Python), auxiliary-register blocks in `text` fences.
+6. Check the result against the quality checklist below and revise.
+7. Keep surrounding prose to a few sentences at most, reserved for what the
    block cannot carry - a bug you noticed, a caveat, missing context.
 
 ## The rules
@@ -76,6 +87,29 @@ reimplement the behavior from it.
   expand dense one-liners into their real steps. When a whole function is
   one idea, say it in one line.
 
+## The register palette
+
+The narrative register above is the default and the only register for
+control flow. Four auxiliary tools cover recurring non-control-flow ideas.
+Switch registers between blocks, never within a line.
+
+- **Anchors:** a sentence may end with an optional bracketed source
+  anchor - `Take the cheapest entry off the frontier.  [frontier.pop]` -
+  when the reader will move between translation and source. The sentence
+  must survive the anchor's deletion; anchors never appear in comments,
+  `Where` clauses, or titles.
+- **Taxonomy:** enumerate a design space or option menu as an aligned
+  label-list in a `text` fence - short label, colon, one-sentence
+  description, no nesting. Nesting means it is control flow in disguise.
+- **Algebra:** define what something is made of with one equation line in
+  a `text` fence - `Thought = Prompt + Context + LLM + Parsing` - using
+  only `=` and `+`, every term a capitalized human phrase defined nearby.
+  Parts only, never sequence.
+- **Transition:** summarize a state machine with arrow lines in a `text`
+  fence - `ASSESS -> RESPOND | PLAN | SLEEP` - but only alongside a
+  narrative block that shows what happens inside each state. Never ship
+  the arrows alone.
+
 ## Domain notes
 
 - Classes: `Define the "ClassName" class:`, the invariant first, then one
@@ -101,8 +135,12 @@ sentences of prose after it - never silently fix it in the pseudocode.
 
 ## Quality checklist before delivering
 
-No operators or code syntax in any line; no `If` missing an alternative
-that matters; no loop without a visible ending; no exit without a named
-reason; no comment narrating the line below it; no state renamed mid-block;
-no swallowed error left unsurfaced; no nesting past four levels; no real
-code inside the block; no prose pretending to be Pseudo; title present.
+No operators or code syntax in any line (outside `Define` openers,
+trailing anchors, and auxiliary-register fences); no `If` missing an
+alternative that matters; no loop without a visible ending; no exit
+without a named reason; no comment narrating the line below it; no state
+renamed mid-block; no swallowed error left unsurfaced; no nesting past
+four levels; no real code inside the block; no prose pretending to be
+Pseudo; no anchor whose deletion breaks its sentence; no transition map
+shipped without its narrative block; no multi-file target translated at a
+guessed resolution without naming the guess; title present.
