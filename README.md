@@ -124,13 +124,9 @@ be that conversation.
 ```
 pseudo/
 ├── README.md                  You are here
-├── SPEC.md                    The canonical spec: ten rules, the registers,
-│                              and the resolution ladder
-├── examples/                  Ten worked translations across ten languages:
-│                              JS, Python, SQL, TypeScript, Rust, Node,
-│                              C++, Lisp, C, and regex
-├── skills/pseudo/SKILL.md     The skill: the full translation doctrine,
-│                              rules, vocabulary, and domain playbook
+├── SPEC.md                    The canonical spec: ten rules, the registers
+├── examples/                  Ten worked translations across ten languages
+├── skills/pseudo/SKILL.md     The skill: the full translation doctrine
 ├── rules/pseudo-style.md      The rule: makes Pseudo the house pseudocode style
 └── commands/pseudo.md         The command: /pseudo <target> on demand
 ```
