@@ -1,5 +1,19 @@
 # Pseudo
 
+```text
+                  _ _                            \    |    /
+               _-( | )-_                     .    \   |   /    .
+            _-(   \|/   )-_                    .    \ | /    .
+           (_-(   /|\   )-_)             - --   .---------.   -- -
+             (_-  \|/  -_)                     (           )
+                \  |  /                  ~~~~~~~'---------'~~~~~~~
+                   |                  ~~~    ~~~~   ~~~~~   ~~~~
+                   |\              ~~~   ~~~~    ~~~~~   ~~~~  ~~
+                   | \          ~~~    ~~~~   ~~~~~~   ~~~~
+     ______________|__\_________________________________________
+       .  '  .  .     '  .    p s e u d o    .   '  .    ' .  .
+```
+
 **Point at any code, in any language, and get back logic that anyone can read.**
 
 Pseudo is a pseudocode style with one big idea: write every line as a plain
@@ -71,9 +85,12 @@ the real function fires - it is all there, more clearly than the source
 states it. The comments are not narration; they are a voiceover explaining
 *why* each part exists.
 
-That is the whole trick, and it works on everything. There are more worked
-examples - Python, SQL, and an AI agent design - in the
-[examples gallery](examples/README.md).
+That is the whole trick, and it works on everything. The
+[examples gallery](examples/README.md) proves it across ten languages and
+ten domains: Python data structures, SQL analytics, a TypeScript reducer,
+a Rust worker pool, a Node.js stream pipeline, Dijkstra in C++, symbolic
+differentiation in Lisp, pointer surgery in C, and a regex nobody wants to
+read - all coming out in the same plain notation.
 
 ## Why this is a superpower
 
@@ -105,9 +122,12 @@ be that conversation.
 pseudo/
 ├── README.md                        You are here
 ├── SPEC.md                          The canonical style specification (the ten rules)
-├── examples/                        Worked translations: JS, Python, SQL, agent design
+├── examples/                        Ten worked translations across ten languages:
+│                                    JS, Python, SQL, TypeScript, Rust, Node,
+│                                    C++, Lisp, C, and regex
 └── .claude/
-    ├── skills/pseudo/SKILL.md       The skill: teaches your agent to write Pseudo
+    ├── skills/pseudo/SKILL.md       The skill: the full translation doctrine,
+    │                                rules, vocabulary, and domain playbook
     ├── rules/pseudo-style.md        The rule: makes Pseudo the house pseudocode style
     └── commands/pseudo.md           The command: /pseudo <target> on demand
 ```

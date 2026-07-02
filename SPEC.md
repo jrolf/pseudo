@@ -250,6 +250,16 @@ holds the line between the two on purpose:
 | Exits | Implicit fall-through | Vague | Named terminal reasons |
 | Comments | Rare, narrate syntax | n/a | Voiceover: why, not what |
 
+## Beyond this spec
+
+This document defines the style. The operational doctrine for actually
+producing translations - vocabulary tables, an altitude guide, and a
+domain-by-domain playbook covering classes, recursion, concurrency, async,
+error handling, SQL, regexes, state machines, pointer code, and functional
+pipelines - lives in the skill file at `.claude/skills/pseudo/SKILL.md`.
+The two documents agree by construction; if they ever diverge, this spec
+wins and the skill has a bug.
+
 ## Style anti-patterns to catch in review
 
 - A line containing `()`, `=`, `->`, `[i]`, or a camelCase word. Rewrite it
