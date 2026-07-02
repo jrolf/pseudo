@@ -39,9 +39,17 @@ reimplement the behavior from it.
 - Four spaces per indent level; indentation is the control flow and must
   be trustworthy. Block openers end with a colon: `If ... :`,
   `Otherwise if ... :` (or `elif` in long chains), `Otherwise:`,
-  `For each ... :`, `While ... :`, `To <do something> ... :` for defining
-  reusable operations, or a descriptive grouping phrase ("Validate the
-  input:").
+  `For each ... :`, `While ... :`, or a descriptive grouping phrase
+  ("Validate the input:").
+- Named functions and methods from the source open with
+  `Define "name", given [params]:` - the real identifier in quotes, the
+  real parameter names in brackets (omit `, given [...]` when there are
+  none). This is the one place source spelling is welcome; inside the
+  body, everything goes back to human phrases. Classes open with
+  `Define the "ClassName" class:`, state the invariant the object
+  maintains, then one `Define` per public operation. Use
+  `To <do something> ... :` only for operations with no source
+  identifier, such as design sketches.
 - Name state in human terms and keep names consistent for the whole block:
   "the retry counter", "the user's latest message", "the frontier". Prefer
   the role something plays over the type it has.
@@ -63,9 +71,9 @@ reimplement the behavior from it.
 
 ## Domain notes
 
-- Classes: open with the invariant the object maintains, then one opener
-  block per public operation, ordered by story rather than file order.
-- Recursion: name the operation with `To ... :`, state base cases first,
+- Classes: `Define the "ClassName" class:`, the invariant first, then one
+  `Define` per public operation, ordered by story rather than file order.
+- Recursion: mark the definition with `Define`, state base cases first,
   and phrase recursive steps using the operation's own verb.
 - Concurrency: give each actor its own block, translate channels and queues
   as physical metaphors, and make the shutdown protocol explicit - it is

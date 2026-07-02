@@ -46,30 +46,33 @@ std::vector<long long> dijkstra(
 ```python
 # DIJKSTRA: CHEAPEST COST FROM ONE PLACE TO EVERY OTHER PLACE
 
-Record the best known cost to reach every place:
-    Start every place at "unreachable", except the starting place at zero.
+Define "dijkstra", given [graph, source]:
 
-Keep a frontier of places waiting to be explored,
-always handing back the cheapest one first.
-Put the starting place on the frontier at cost zero.
+    Record the best known cost to reach every place:
+        Start every place at "unreachable", except the starting place
+        at zero.
 
-While the frontier is not empty:
-    Take the cheapest waiting entry off the frontier.
+    Keep a frontier of places waiting to be explored,
+    always handing back the cheapest one first.
+    Put the starting place on the frontier at cost zero.
 
-    # The frontier cannot update an entry already inside it, so when a
-    # place's cost improves, a duplicate cheaper entry is added instead.
-    # The old, worse entry still surfaces eventually - and this check
-    # is where it gets recognized and thrown away.
-    If this entry is worse than the best known cost for its place:
-        Skip it; it is stale.
+    While the frontier is not empty:
+        Take the cheapest waiting entry off the frontier.
 
-    For each road leaving this place:
-        Work out the cost of reaching the neighbor through this place.
-        If that beats the neighbor's best known cost:
-            Record the improvement.
-            Add the neighbor to the frontier at the improved cost.
+        # The frontier cannot update an entry already inside it, so when
+        # a place's cost improves, a duplicate cheaper entry is added
+        # instead. The old, worse entry still surfaces eventually - and
+        # this check is where it gets recognized and thrown away.
+        If this entry is worse than the best known cost for its place:
+            Skip it; it is stale.
 
-Return the table of best known costs.
+        For each road leaving this place:
+            Work out the cost of reaching the neighbor through this place.
+            If that beats the neighbor's best known cost:
+                Record the improvement.
+                Add the neighbor to the frontier at the improved cost.
+
+    Return the table of best known costs.
 ```
 
 ## What the translation reveals

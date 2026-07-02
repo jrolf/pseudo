@@ -50,7 +50,11 @@ The state is always exactly one of:
     success with the data and its arrival time,
     or error with a message.
 
-When an event arrives, produce the next state from the current one:
+Define "reducer", given [state, action]:
+
+    # The reducer never mutates anything. Given the current state and one
+    # event, it produces the next state, and stale events produce no
+    # change at all.
 
     If the event is "start fetching":
         Become loading, and remember which request this is.

@@ -94,9 +94,11 @@ After the loop ends:
 
 Conditionals use `If` / `Otherwise if` / `Otherwise`. (Python's `elif` is an
 accepted shorthand for `Otherwise if`, especially in long state-machine
-chains.) Loops use `For each ... :` and `While ... :`. You may also open a
-block with a plain descriptive phrase ("Validate the decision:") to group
-related steps, the way a function or section header would.
+chains.) Loops use `For each ... :` and `While ... :`. Named functions,
+methods, and classes open with `Define` (see "Defining functions, methods,
+and classes" below). You may also open a block with a plain descriptive
+phrase ("Validate the decision:") to group related steps, the way a section
+header would.
 
 ### 4. Name things the way a human would
 
@@ -104,6 +106,11 @@ Refer to state with human noun phrases: "the running result", "the retry
 counter", "the working memory", "the user's latest message". Never invent
 variable names, and never carry cryptic names over from the source code. If
 the original calls it `usr_ctx_blob`, Pseudo calls it "the user's context".
+
+The single exception is the `Define` opener (see "Defining functions,
+methods, and classes"), where the real identifier and parameter names from
+the source appear verbatim so readers can jump between the translation and
+the code.
 
 ### 5. Comments are voiceover, not narration
 
@@ -184,6 +191,66 @@ the block once and explain the logic back to you?
 
 ---
 
+## Defining functions, methods, and classes
+
+When the source defines a named callable, Pseudo marks the definition
+explicitly rather than hiding it behind a descriptive phrase. The opener is:
+
+```python
+Define "name", given [param, param]:
+```
+
+Three details make this work:
+
+- The quoted name is the **real identifier from the source, verbatim**.
+  This is the one place where source spelling (camelCase and all) is
+  welcome inside Pseudo, because it lets a reader jump between the
+  translation and the code.
+- The square brackets list the **real parameter names**, comma-separated.
+  Omit `, given [...]` entirely when there are no parameters.
+- The body is indented beneath the opener, exactly like a Python `def`.
+
+A class opens the same way, followed first by the invariant the object
+maintains - its standing promise, stated as plain sentences - and then one
+`Define` per public operation:
+
+```python
+# LEAST-RECENTLY-USED CACHE
+
+Define the "LRUCache" class:
+
+    The cache keeps its entries in order from least recently used to
+    most recently used, and holds at most a fixed number of entries.
+
+    Define "get", given [key]:
+        If the key is not in the cache:
+            Return nothing.
+        # A lookup counts as a use, so the entry earns a reprieve
+        # from eviction.
+        Move the entry to the most-recently-used end.
+        Return the stored value.
+
+    Define "put", given [key, value]:
+        If the key is already in the cache:
+            Move the existing entry to the most-recently-used end.
+        Write the value under the key.
+
+        If the cache is now over capacity:
+            # The entry at the far end is, by construction, the one
+            # nobody has touched for the longest time. It pays the price.
+            Evict the entry at the least-recently-used end.
+```
+
+Private helpers that exist only for tidiness in the source are translated
+inline inside the operations that use them; a helper earns its own `Define`
+only when it carries an idea of its own.
+
+When there is no source identifier to quote - sketching a design before any
+code exists, or naming a sub-operation you extracted for readability - use
+the recipe form instead: `To differentiate a formula with respect to a
+variable:`. The `To ... :` opener signals "this is a callable operation"
+without inventing a fake identifier.
+
 ## Anatomy of a Pseudo block
 
 Most Pseudo blocks, whatever their size, follow the same skeleton:
@@ -263,7 +330,8 @@ wins and the skill has a bug.
 ## Style anti-patterns to catch in review
 
 - A line containing `()`, `=`, `->`, `[i]`, or a camelCase word. Rewrite it
-  as a sentence.
+  as a sentence. (The one sanctioned exception: the quoted identifier and
+  bracketed parameter list in a `Define` opener.)
 - An `If` with no visible alternative when the alternative matters. Add the
   `Otherwise:` or state that nothing happens.
 - A loop with no visible way to end. Add the exit and name its reason.

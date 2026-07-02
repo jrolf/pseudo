@@ -107,7 +107,8 @@ Python. Keep to a small, stable vocabulary:
 | `Otherwise:` | The final fallback branch |
 | `For each ... :` | Iteration over a collection |
 | `While ... :` | Iteration until a condition changes |
-| `To <do something> ... :` | Defining a reusable operation |
+| `Define "name", given [params]:` | Defining a function, method, or class that exists in the source |
+| `To <do something> ... :` | Defining an operation with no source identifier (design sketches, extracted sub-operations) |
 | A descriptive phrase, e.g. `Validate the decision:` | Grouping a phase of related steps, like a section header |
 | `After the loop ends:` / `When ... :` | Deferred or event-driven blocks |
 
@@ -120,6 +121,17 @@ Refer to state with human noun phrases: "the retry counter", "the working
 memory", "the user's latest message", "the running total". Never invent
 variable names, and never carry cryptic names over from the source. If the
 original calls it `usr_ctx_blob`, Pseudo calls it "the user's context".
+
+The single exception is the `Define` opener, where the real identifier and
+parameter names from the source appear verbatim (camelCase and all) so a
+reader can jump between the translation and the code:
+
+```python
+Define "fetchWithRetry", given [url, attempts]:
+```
+
+Inside the body, those parameters go back to being human phrases ("the
+resource's address", "the allowed number of attempts").
 
 Two refinements:
 
@@ -300,31 +312,69 @@ algorithm has one ("Keep track of three positions: the part already
 reversed, the link being flipped, and the untouched remainder"), because
 the invariant is usually the sentence that makes the algorithm click.
 
+### Functions with names
+
+When the source defines a named callable, mark the definition explicitly
+with a `Define` opener: the real identifier in quotes, then the real
+parameter names in square brackets. Omit `, given [...]` when there are no
+parameters. The body indents beneath it, exactly like a Python `def`:
+
+```python
+# REVERSE A LINKED LIST IN PLACE
+
+Define "reverse", given [head]:
+
+    Keep track of three positions while walking the chain:
+        ...
+```
+
+Use the `To ... :` recipe form only when there is no source identifier to
+quote - a design sketched before code exists, or a sub-operation you
+extracted for readability.
+
 ### Classes and objects
 
-Open with the object's defining promise - the invariant it maintains -
-as plain statements before any operations:
+A class opens with `Define the "ClassName" class:`. First inside it comes
+the object's standing promise - the invariant it maintains - stated as
+plain sentences. Then one `Define` per public operation:
 
 ```python
 # LEAST-RECENTLY-USED CACHE
 
-The cache keeps its entries in order from least recently used to most
-recently used, and holds at most a fixed number of entries.
+Define the "LRUCache" class:
+
+    The cache keeps its entries in order from least recently used to
+    most recently used, and holds at most a fixed number of entries.
+
+    Define "get", given [key]:
+        If the key is not in the cache:
+            Return nothing.
+        # A lookup counts as a use, so the entry earns a reprieve.
+        Move the entry to the most-recently-used end.
+        Return the stored value.
+
+    Define "put", given [key, value]:
+        If the key is already in the cache:
+            Move the existing entry to the most-recently-used end.
+        Write the value under the key.
+        If the cache is now over capacity:
+            Evict the entry at the least-recently-used end.
 ```
 
-Then give each public operation its own opener block, and translate private
-helpers inline inside the operations that use them (a helper that exists
-only for tidiness in the source does not deserve its own block). Order the
-operations by the story they tell, not by their order in the source file.
+Translate private helpers inline inside the operations that use them (a
+helper that exists only for tidiness in the source does not deserve its own
+`Define`). Order the operations by the story they tell, not by their order
+in the source file.
 
 ### Recursion
 
-Recursion reads naturally in Pseudo as long as you do three things: define
-the operation with a `To ... :` opener so it has a name, state the base
-cases first, and phrase recursive steps as uses of the named operation:
+Recursion reads naturally in Pseudo as long as you do three things: mark
+the definition (with `Define` for source functions, `To ... :` for
+sketches), state the base cases first, and phrase recursive steps as uses
+of the operation's own verb:
 
 ```python
-To differentiate a formula with respect to a variable:
+Define "deriv", given [expr, var]:
 
     If the formula is a plain number:
         The derivative is zero.
@@ -452,27 +502,29 @@ Translation:
 ```python
 # FETCH WITH BOUNDED, BACKING-OFF RETRIES
 
-Set the waiting period to a fifth of a second.
+Define "fetchWithRetry", given [url, attempts]:
 
-For each attempt, up to the allowed number of attempts:
-    Request the resource.
+    Set the waiting period to a fifth of a second.
 
-    If the response is good:
-        Return the parsed result.
+    For each attempt, up to the allowed number of attempts:
+        Request the resource.
 
-    If the response is a client error (roughly, codes in the 400s):
-        # A client error means the request itself is wrong. Retrying
-        # the same wrong request can never succeed, so it is treated
-        # as fatal... unless attempts remain, in which case this code
-        # swallows it and retries anyway - see the note below.
-        Raise a client-error failure.
+        If the response is good:
+            Return the parsed result.
 
-    If this was the last allowed attempt:
-        Re-raise whatever failure just occurred.
+        If the response is a client error (roughly, codes in the 400s):
+            # A client error means the request itself is wrong. Retrying
+            # the same wrong request can never succeed, so it is treated
+            # as fatal... unless attempts remain, in which case this code
+            # swallows it and retries anyway - see the note below.
+            Raise a client-error failure.
 
-    # Backing off protects a struggling server from being hammered.
-    Wait for the waiting period.
-    Double the waiting period for next time.
+        If this was the last allowed attempt:
+            Re-raise whatever failure just occurred.
+
+        # Backing off protects a struggling server from being hammered.
+        Wait for the waiting period.
+        Double the waiting period for next time.
 ```
 
 And one sentence of prose after the block: "Note a likely bug: the
@@ -522,7 +574,8 @@ non-negotiable:
 Run this before delivering. Any hit means revise:
 
 - [ ] A line containing `()`, `=`, `->`, `[i]`, a camelCase word, or an
-      operator instead of words.
+      operator instead of words - anywhere except the quoted identifier
+      and bracketed parameter list of a `Define` opener.
 - [ ] An `If` with no visible alternative, where the alternative matters.
 - [ ] A loop with no visible way to end.
 - [ ] An exit that does not name its reason.

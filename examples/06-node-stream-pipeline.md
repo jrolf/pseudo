@@ -35,26 +35,28 @@ function archiveErrors(inputPath, outputPath, done) {
 ```python
 # ARCHIVE ERROR LINES FROM A HUGE LOG, WITHOUT LOADING IT INTO MEMORY
 
-Connect four stations into one assembly line:
-    read the log file a chunk at a time,
-    keep only the lines containing the error marker,
-    compress whatever survives,
-    and write the compressed result to the archive file.
+Define "archiveErrors", given [inputPath, outputPath, done]:
 
-While the line runs:
-    Each station takes a chunk, does its one job, and passes the result on.
-    # No station is allowed to outrun the next. If the output disk is
-    # slow, the slowdown propagates backward station by station until
-    # even the reading pauses. This backpressure is the reason a
-    # ten-gigabyte log never needs ten gigabytes of memory.
+    Connect four stations into one assembly line:
+        read the log file a chunk at a time,
+        keep only the lines containing the error marker,
+        compress whatever survives,
+        and write the compressed result to the archive file.
 
-If any station fails:
-    Shut down the entire line and destroy the partial output stream.
-    Report the failure once, through the single completion callback.
+    While the line runs:
+        Each station takes a chunk, does its one job, and passes it on.
+        # No station is allowed to outrun the next. If the output disk is
+        # slow, the slowdown propagates backward station by station until
+        # even the reading pauses. This backpressure is the reason a
+        # ten-gigabyte log never needs ten gigabytes of memory.
 
-When the reader reaches the end of the log:
-    Let the chunks still inside the line drain through to the archive.
-    Report success through the completion callback.
+    If any station fails:
+        Shut down the entire line and destroy the partial output stream.
+        Report the failure once, through the single completion callback.
+
+    When the reader reaches the end of the log:
+        Let the chunks still inside the line drain through to the archive.
+        Report success through the completion callback.
 ```
 
 ## What the translation reveals

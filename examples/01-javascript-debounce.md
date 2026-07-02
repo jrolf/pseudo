@@ -28,24 +28,27 @@ function debounce(fn, wait, immediate) {
 ```python
 # DEBOUNCE: COALESCE A BURST OF CALLS INTO ONE
 
-Create a wrapper around the original function:
-    Keep one shared countdown timer that survives between calls.
+Define "debounce", given [fn, wait, immediate]:
 
-Whenever the wrapper is called:
-    # Every new call resets the clock. Only silence lets the timer finish,
-    # which is what turns a burst of calls into a single one.
-    Cancel the countdown timer if one is running.
-    Start a fresh countdown for the configured waiting period.
+    Build and return a wrapper around the original function,
+    sharing one countdown timer that survives between calls.
 
-    If the wrapper is in fire-first mode and no countdown was running:
-        # Fire-first mode responds instantly to the first call in a burst,
-        # then ignores the rest of the burst instead of the start of it.
-        Call the original function now with the caller's arguments.
+    Whenever the wrapper is called:
+        # Every new call resets the clock. Only silence lets the timer
+        # finish, which is what turns a burst of calls into a single one.
+        Cancel the countdown timer if one is running.
+        Start a fresh countdown for the configured waiting period.
 
-When a countdown finishes without being cancelled:
-    Mark that no countdown is running.
-    If the wrapper is in fire-last mode:
-        Call the original function with the most recent arguments.
+        If the wrapper is in fire-first mode and no countdown was running:
+            # Fire-first mode responds instantly to the first call in a
+            # burst, then ignores the rest of the burst instead of the
+            # start of it.
+            Call the original function now with the caller's arguments.
+
+    When a countdown finishes without being cancelled:
+        Mark that no countdown is running.
+        If the wrapper is in fire-last mode:
+            Call the original function with the most recent arguments.
 ```
 
 ## What the translation reveals

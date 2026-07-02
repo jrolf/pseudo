@@ -45,29 +45,32 @@ fn parallel_word_count(paths: Vec<String>, workers: usize) -> usize {
 ```python
 # PARALLEL WORD COUNT WITH A WORKER POOL
 
-Set up two conveyor belts:
-    one carrying file paths out to the workers,
-    and one carrying finished counts back.
+Define "parallel_word_count", given [paths, workers]:
 
-Start the requested number of workers, each on its own thread:
-    Each worker repeats forever:
-        # Only one worker at a time may reach into the job belt; a lock
-        # guarantees every file is claimed by exactly one worker.
-        Take the next file path from the job belt, waiting if none is ready.
-        If the job belt has been closed and emptied:
-            The worker finishes.
-        Read the file, treating an unreadable file as empty.
-        Count its words.
-        Put the count on the result belt.
+    Set up two conveyor belts:
+        one carrying file paths out to the workers,
+        and one carrying finished counts back.
 
-Feed every file path onto the job belt.
-Close the job belt.
-    # Closing the belt IS the shutdown signal. There is no "stop" message:
-    # each worker discovers the end of the work by finding the belt closed.
+    Start the requested number of workers, each on its own thread:
+        Each worker repeats forever:
+            # Only one worker at a time may reach into the job belt; a lock
+            # guarantees every file is claimed by exactly one worker.
+            Take the next file path from the belt, waiting if none is ready.
+            If the job belt has been closed and emptied:
+                The worker finishes.
+            Read the file, treating an unreadable file as empty.
+            Count its words.
+            Put the count on the result belt.
 
-Collect counts from the result belt until it closes too,
-which happens once every worker has finished and let go of it.
-Return the sum of all the counts.
+    Feed every file path onto the job belt.
+    Close the job belt.
+        # Closing the belt IS the shutdown signal. There is no "stop"
+        # message: each worker discovers the end of the work by finding
+        # the belt closed.
+
+    Collect counts from the result belt until it closes too,
+    which happens once every worker has finished and let go of it.
+    Return the sum of all the counts.
 ```
 
 ## What the translation reveals

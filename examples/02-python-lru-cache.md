@@ -33,25 +33,28 @@ class LRUCache:
 ```python
 # LEAST-RECENTLY-USED CACHE
 
-The cache keeps its entries in order from least recently used to most
-recently used, and holds at most a fixed number of entries.
+Define the "LRUCache" class:
 
-Looking something up:
-    If the key is not in the cache:
-        Return nothing.
-    # A lookup counts as a use, so the entry earns a reprieve from eviction.
-    Move the entry to the most-recently-used end.
-    Return the stored value.
+    The cache keeps its entries in order from least recently used to
+    most recently used, and holds at most a fixed number of entries.
 
-Storing something:
-    If the key is already in the cache:
-        Move the existing entry to the most-recently-used end.
-    Write the value under the key.
+    Define "get", given [key]:
+        If the key is not in the cache:
+            Return nothing.
+        # A lookup counts as a use, so the entry earns a reprieve
+        # from eviction.
+        Move the entry to the most-recently-used end.
+        Return the stored value.
 
-    If the cache is now over capacity:
-        # The entry at the far end is, by construction, the one nobody
-        # has touched for the longest time. It pays the price.
-        Evict the entry at the least-recently-used end.
+    Define "put", given [key, value]:
+        If the key is already in the cache:
+            Move the existing entry to the most-recently-used end.
+        Write the value under the key.
+
+        If the cache is now over capacity:
+            # The entry at the far end is, by construction, the one
+            # nobody has touched for the longest time. It pays the price.
+            Evict the entry at the least-recently-used end.
 ```
 
 ## What the translation reveals

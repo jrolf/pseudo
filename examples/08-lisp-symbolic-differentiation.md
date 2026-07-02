@@ -32,7 +32,7 @@ that scare everyone away.
 # The function looks at the formula's shape, applies the matching rule
 # from calculus, and calls itself on the smaller pieces inside.
 
-To differentiate a formula with respect to a variable:
+Define "deriv", given [expr, var]:
 
     If the formula is a plain number:
         The derivative is zero.

@@ -12,8 +12,13 @@ The core requirements, in brief:
 - Indentation (four spaces) carries the control flow. Block openers end with
   a colon: `If ... :`, `Otherwise:`, `For each ... :`, `While ... :`, or a
   plain descriptive phrase that groups steps ("Validate the decision:").
+- Named callables from the source open with `Define "name", given [params]:`
+  using the real identifier and parameter names; classes open with
+  `Define the "ClassName" class:` followed by the invariant the object
+  maintains, then one `Define` per public operation.
 - Name state in human terms ("the retry counter", "the user's latest
-  message"), never with variable names.
+  message"), never with variable names - the `Define` opener is the one
+  sanctioned exception.
 - `#` comments are voiceover: they explain why a phase exists, never what
   the next line does.
 - Every exit is explicit and names its reason ("Stop with a budget-exhausted
